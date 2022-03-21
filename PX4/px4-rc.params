@@ -1,0 +1,5 @@
+#!/bin/sh
+# shellcheck disable=SC2154
+
+param set-default MAV_SYS_ID $((INSTANCE_NUMBER))
+param set-default SDLOG_MODE -1

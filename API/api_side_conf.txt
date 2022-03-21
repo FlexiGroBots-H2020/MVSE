@@ -1,0 +1,11 @@
+{
+    "TARGET_INSTANCE": 2,
+    "UDP_IP": "localhost",
+    "UDP_PORT_PX4_TO_API": 14540,
+    "UDP_PORT_API_TO_PX4": 14580,
+    "MQTT_BROKER_ADD": "flexigrobots.collab-cloud.eu",
+    "MQTT_PORT": 1883,
+    "BASE_TOPIC_API_TO_PX4": "/3009/1*/api_to_px4",
+    "BASE_TOPIC_PX4_TO_API": "/3009/*/px4_to_api",
+    "BASE_MQTT_CLIENT_NAME": "api_*_side"
+}

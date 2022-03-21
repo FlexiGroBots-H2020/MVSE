@@ -1,0 +1,13 @@
+#!/bin/sh
+# shellcheck disable=SC2154
+
+udp_offboard_port_local=$((14580))
+udp_offboard_port_remote=$((14540))
+udp_gcs_port_local=$((18570))
+
+# GCS link
+mavlink start -x -u $udp_gcs_port_local -r 1000 -f
+mavlink stream -r 5 -s GLOBAL_POSITION_INT -u $udp_gcs_port_local
+
+# API/Offboard link
+mavlink start -x -u $udp_offboard_port_local -r 400 -f -m minimal -o $udp_offboard_port_remote
