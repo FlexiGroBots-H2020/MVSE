@@ -52,7 +52,8 @@ Make sure to  choose a free instance number
     ```
 The script will edit the config files in the PX4 source and start the MQTT client, close it if you don't need to run the simulation.
 ## QGroundControl  fist setup
-Requirements: git, pip, paho-mqtt, pymavlink
+Requirements: git, pip, paho-mqtt, pymavlink  
+(tested with Ubuntu 20.04 LTS, for different distributions commands may differ)
 - In a terminal execute
     ```
     sudo usermod –a –G dialout $USER
@@ -81,12 +82,12 @@ python3 /MQTT/px4_mqtt_client.py
 ```
 
 ## QGroundControl
-Open two terminals in /TOOLS/QGC  
+Open two terminals in /MVSE/QGC  
 Start QGroundControl
 ```
 . QGroundControl.AppImage
 ```
 Start QGC MQTT Client
 ```
-python3 /MQTT/qgc_mqtt_client.py
+python3 qgc_mqtt_client.py
 ```

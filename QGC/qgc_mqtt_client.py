@@ -9,7 +9,7 @@ os.environ["MAVLINK20"] = "1"
 os.environ["MAVLINK_DIALECT"] = "standard"
 from pymavlink import mavutil
 
-CONF_FILE_NAME = "qgc_side_conf.json"
+CONF_FILE_NAME = "qgc_conf.json"
 with open(CONF_FILE_NAME) as f:
     param = json.loads(f.read())
 UDP_IP = param["UDP_IP"]
@@ -65,10 +65,11 @@ def edev_send(edev_l, topic, payload):
     n = int(topic.split("/")[2]) -100
     if n >= 0 and n < EDEV_N:
         l = str(payload).split("|")
-        lat = int(float(l[1])*1E7)
-        lon = int(float(l[3])*1E7)
+        lat = int(float(l[1])*1E7)      # conversion to deg * E-7
+        lon = int(float(l[3])*1E7)      # conversion to deg * E-7
+        ele = int(float(l[5])*1E3)      # conversion to mm
         edev_l[n].mav.heartbeat_send(mavutil.mavlink.MAV_TYPE_FREE_BALLOON, mavutil.mavlink.MAV_AUTOPILOT_INVALID, 0, 0, 0)
-        edev_l[n].mav.global_position_int_send(0,lat,lon,10,10,0,0,0,0)
+        edev_l[n].mav.global_position_int_send(0,lat,lon,ele,0,0,0,0,0)
 
 def on_message(client, userdata, message):
     global socket_l
