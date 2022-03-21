@@ -4,7 +4,7 @@
     "EDEV_N": 10,
     "QGC_INST": 1,
     "MQTT_PORT": 1883,
-    "MQTT_BROKER_ADD": "flexigrobots.collab-cloud.eu",
+    "MQTT_BROKER_ADD": "",
     "BASE_UDP_PORT_TO_PX4": 18570,
     "UDP_PORT_TO_QGC": 14550,
     "BASE_TOPIC_QGC_TO_PX4": "/api-key/0/qgc_to_px4_*",
