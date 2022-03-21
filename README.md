@@ -21,7 +21,7 @@ At the PX4 side, since all the PX4 instances are supposed to run on different de
 This way there is no need of modifying the default ports in PX4 simulators.
 ## MAVLink Connection with External Devices
 If in the QGC configuration file ENABLE_EDEV is set to True, the received messages with topic __/(api-key)/10*/edev_to_qgc__ are received, the information contained in the plain text payload is decoded and saved.  
-The payload structure is "lat|xx.yyy|lon|xx.yy|ele|xx.yyy|h|xx.yyy|v|xx.yyy|m|xx.yyy"
+The payload structure is __lat|xx.yyy|lon|xx.yy|ele|xx.yyy|h|xx.yyy|v|xx.yyy|m|xx.yyy__
 
 A pymavlink drone instance is created for every edev (to be set in the EDEV_N param), and every time an MQTT message is received, a GLOBAL_POSITION_INT Mavlink message is generated, along with a Heartbeat.
 External devices are seen from QGC as FREE BALLOONS, so no errors will be displayed because of the unilateral communication.
