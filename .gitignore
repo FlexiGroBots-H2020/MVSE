@@ -2,3 +2,4 @@ QGC/qgc_conf.json
 QGC/qgc_side.py
 PX4/px4_conf.json
 PX4/px4_auto_init.py
+API/api_conf.json

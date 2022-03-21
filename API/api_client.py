@@ -2,10 +2,9 @@ import time
 import socket
 import paho.mqtt.client as mqttClient
 import concurrent.futures
-import csv
 import json
 
-CONF_FILE_NAME = "api_side_conf.txt"
+CONF_FILE_NAME = "api_conf.json"
 
 with open(CONF_FILE_NAME) as f:
     param = json.loads(f.read())
@@ -51,11 +50,6 @@ def rec_pub(sock, topic, client):
         data, addr = sock.recvfrom(1024)
         client.publish(topic, data)
         print("received from API")
-        # msg_code = int.from_bytes(data[12:14], byteorder="little")
-        # print(msg_code)
-        # with open("fence_update.csv", "x") as f:
-        #     writer = csv.writer(f)
-        #     writer.writerow(bytearray(data))
 
 Connected = False
 client = mqttClient.Client(CLIENT_NAME)
@@ -72,5 +66,3 @@ client.subscribe(TOPIC_PX4_TO_API)
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
     r1 = executor.submit(rec_pub, sock,TOPIC_API_TO_PX4,client)
-
-
