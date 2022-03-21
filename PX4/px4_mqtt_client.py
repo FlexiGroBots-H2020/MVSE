@@ -20,9 +20,9 @@ while INSTANCE_NUMBER < 1 or INSTANCE_NUMBER > 9:
 
 CONF_FILE_NAME = "px4_conf.json"
 
+# Parameter import from configuration file
 with open(CONF_FILE_NAME) as f:
     param = json.loads(f.read())
-
 UDP_IP = param["UDP_IP"]
 UDP_PORT_QGC_TO_PX4 = param["UDP_PORT_QGC_TO_PX4"]
 UDP_PORT_PX4_TO_QGC = param["UDP_PORT_PX4_TO_QGC"]
@@ -42,6 +42,8 @@ MQTT_BROKER_PASSWORD = param["MQTT_BROKER_PASSWORD"]
 ENABLE_API = param["ENABLE_API"]
 ENABLE_FIWARE = param["ENABLE_FIWARE"]
 
+# PX4-Autopilot and jMAVSim configuration file edit
+
 with open("px4-rc.params", "r") as px4_param_file:
     px4_param = px4_param_file.readlines()
 px4_param[3] = px4_param[3].replace("INSTANCE_NUMBER", str(INSTANCE_NUMBER))
@@ -57,6 +59,7 @@ sim[81] = "public static LatLonAlt DEFAULT_ORIGIN_POS = new LatLonAlt(65.056680,
 with open(os.path.dirname(__file__)+"/../Tools/jMAVSim/src/me/drton/jmavsim/Simulator.java", "w") as sim_file:
     sim_file.writelines(sim)
 
+# Print some useful information
 
 print("Starting MQTT link for instance #"+str(INSTANCE_NUMBER))
 print("UDP ports for PX4-QGC: "+str(UDP_PORT_QGC_TO_PX4)+", "+str(UDP_PORT_PX4_TO_QGC))
@@ -66,19 +69,20 @@ print("Subscribed to topics: "+TOPIC_API_TO_PX4+", "+TOPIC_QGC_TO_PX4)
 print("Publishing to topics: "+TOPIC_PX4_TO_API+", "+TOPIC_PX4_TO_QGC)
 print("MQTT broker on address: "+MQTT_BROKER_ADD+", port "+str(MQTT_PORT))
 
-
+#global variable for telemetry data from MAVLink messages
 tele = {}
-st = 0
 
-
+# socket that listens PX4 UDP messages to forward them via MQTT
 socket_to_qgc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-socket_to_qgc.bind((UDP_IP, UDP_PORT_PX4_TO_QGC))                   ## socket that listens PX4 UDP messages to forward them via MQTT
+socket_to_qgc.bind((UDP_IP, UDP_PORT_PX4_TO_QGC))               
 
+# socket for PX4-API communication
 if ENABLE_API:
     socket_to_api = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     socket_to_api.bind((UDP_IP, UDP_PORT_PX4_TO_API))
 
 
+# MQTT client handler
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         if verbose:
@@ -87,7 +91,8 @@ def on_connect(client, userdata, flags, rc):
         Connected = True                #Signal connection 
     else:
         print("Connection failed")
-  
+
+# Send over UDP to PX4 message received from MQTT by QGC or APIs  
 def on_message(client, userdata, message):
 
     if message.topic == TOPIC_QGC_TO_PX4:
@@ -96,6 +101,7 @@ def on_message(client, userdata, message):
     if message.topic == TOPIC_API_TO_PX4 and ENABLE_API:
         socket_to_api.sendto(message.payload,(UDP_IP, UDP_PORT_API_TO_PX4))
 
+# Receive UDP packets from sock and publish them under "topic" from "client"
 def rec_pub(sock, topic, client):
     msg_code = 0
     while True:
@@ -103,7 +109,7 @@ def rec_pub(sock, topic, client):
         if verbose:
             print("received: " + topic)
         client.publish(topic, data)
-        
+        # MAVlink message decoding block
         if ENABLE_FIWARE:
             if topic == TOPIC_PX4_TO_QGC:
                 msg_code = int.from_bytes(data[7:10], byteorder="little")
@@ -124,28 +130,23 @@ def rec_pub(sock, topic, client):
                 if verbose:
                     print(TOPIC_TO_FIWARE + ": " + S)
 
+Connected = False   #global variable for the state of the MQTT connection
 
-Connected = False   #global variable for the state of the connection
-  
-client = mqttClient.Client(CLIENT_NAME)             #create new instance
-client.on_connect= on_connect                      #attach function to callback
-client.on_message= on_message     
-
+# MQTT client instance creation
+client = mqttClient.Client(CLIENT_NAME)
+client.on_connect= on_connect       #attach function to callback (connection)
+client.on_message= on_message       #attach function to callback (message received)
 if MQTT_BROKER_USERNAME != "" and MQTT_BROKER_PASSWORD != "":
     client.username_pw_set(MQTT_BROKER_USERNAME, MQTT_BROKER_PASSWORD)
-
 client.connect(MQTT_BROKER_ADD, port=MQTT_PORT)
-    
-
-client.loop_start()        #start the loop
-  
+client.loop_start()        #start the loop 
 while Connected != True:    #Wait for connection
     time.sleep(0.1)
-
 client.subscribe(TOPIC_QGC_TO_PX4)
 if ENABLE_API:
     client.subscribe(TOPIC_API_TO_PX4)
 
+# concurrent execution of rec_pub function instances, required since sockets are "blocking"
 with concurrent.futures.ThreadPoolExecutor() as executor:
     r_qgc = executor.submit(rec_pub,socket_to_qgc, TOPIC_PX4_TO_QGC,client)
     if ENABLE_API:
