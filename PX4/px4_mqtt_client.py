@@ -130,9 +130,9 @@ def rec_pub(sock, topic, client):
                 if verbose:
                     print(TOPIC_TO_FIWARE + ": " + S)
 
-Connected = False   #global variable for the state of the MQTT connection
 
-# MQTT client instance creation
+# MQTT client instance start
+Connected = False   #global variable for the state of the MQTT connection
 client = mqttClient.Client(CLIENT_NAME)
 client.on_connect= on_connect       #attach function to callback (connection)
 client.on_message= on_message       #attach function to callback (message received)
