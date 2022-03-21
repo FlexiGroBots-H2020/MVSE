@@ -11,20 +11,23 @@ The implementation of the tools occours in the form of external script to be run
 # Working Principle
 
 ## MAVLink Connection
-MAVLink connection communicates by sending packets through UDP. The default receiving ports are 14550 for the ground control station and 18570 for the PX4-Autopilot. In case of multiple devices, at the QGC side, tha same receiving socket is used for all the incoming data, while the data is sent to the different instances through UDP ports 1857x (with x the instance number). In case of more than 10 devices, the UDP port 18579 is used for all the excedence.  
+MAVLink connection communicates by sending packets through UDP. The default receiving ports are __14550__ for the ground control station and __18570__ for the PX4-Autopilot. In case of multiple devices, at the QGC side, tha same receiving socket is used for all the incoming data, while the data is sent to the different instances through UDP ports 1857**x** (with **x** the instance number). In case of more than 10 devices, the UDP port 18579 is used for all the excedence.  
 In order for a communication to be established between the ground control station and the device, a heartbeat stream must be sent by both sides.
 
 ## MAVLink Connection with PX4-Autopliots
 A socket is created at the QGC side, listening for port 1857x (x the sim N) and sending on 14550 to QGC. 
-The received message is published with the topic /(api-key)/0/qgc_to_px4_x, while mqtt messages received with topic /(api-key)/x/px4_to_qgc are sent over UDP 14550 to QGC. 
+The received message is published with the topic **/(api-key)/0/qgc_to_px4_x**, while mqtt messages received with topic **/(api-key)/x/px4_to_qgc** are sent over UDP 14550 to QGC. 
 At the PX4 side, since all the PX4 instances are supposed to run on different devices, the mqtt received messages from QGC to PX4 are sent via UDP to port 18570, from the same socket that is listening on 14550 for PX4 to QGC packets. 
 This way there is no need of modifying the default ports in PX4 simulators.
 ## MAVLink Connection with External Devices
-If in the configuration file ENABLE_EDEV is set to True, the received messages with topic /(api-key)/10*/edev_to_px4 are received, the information contained in the plain text payload is decoded and saved.  
+If in the QGC configuration file ENABLE_EDEV is set to True, the received messages with topic __/(api-key)/10*/edev_to_qgc__ are received, the information contained in the plain text payload is decoded and saved.  
 The payload structure is "lat|xx.yyy|lon|xx.yy|ele|xx.yyy|h|xx.yyy|v|xx.yyy|m|xx.yyy"
 
 A pymavlink drone instance is created for every edev (to be set in the EDEV_N param), and every time an MQTT message is received, a GLOBAL_POSITION_INT Mavlink message is generated, along with a Heartbeat.
 External devices are seen from QGC as FREE BALLOONS, so no errors will be displayed because of the unilateral communication.
+
+## Communication to Fiware
+By setting __ENABLE_FIWARE__ in px4_conf.json to True, the messages received from the PX4-Autopilot are decoded. When the MAVLink Message ID is __33__, meaning __GLOBAL_POSITION_INT__, the message is decoded and the extracted values are published under the topic **/(api-key)/x/attr** with payload structure __lat|xx.yyy|lon|xx.yy|ele|xx.yyy|h|xx.yyy|v|xx.yyy|m|xx.yyy__
 
 ## API 
 If ENABLE_API is set to True in the PX4 config file, a communication is instanciated over MQTT to and from the ports 14540 and 14580 at the PX4 side, allowing to control in real time the mission from apis.
