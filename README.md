@@ -41,14 +41,14 @@ Requirements: Ubuntu 20.xx LTS, git, pip, paho-mqtt
     ```
 - Clone MVSE Tools
     ```
-    git clone "link to be generated"
+    git clone https://github.com/FlexiGroBots-H2020/MVSE
     ```
 - Copy content of /Tools/PX4 in /PX4-Autopilot/MQTT
-- Edit px4_conf.json to match instance value and MQTT address and credential
-- Open a terminal in /PX4-Autopilot and run px4_mqtt.py  
+- Edit empty_px4_conf.json to match instance value and MQTT address and credential and rename it px4_conf.json
+- Open a terminal in /PX4-Autopilot and run px4_mqtt_client.py  
 Make sure to  choose a free instance number
     ```
-    python3 px4_mqtt.py
+    python3 px4_mqtt_client.py
     ```
 The script will edit the config files in the PX4 source and start the MQTT client, close it if you don't need to run the simulation.
 ## QGroundControl  fist setup
@@ -61,10 +61,10 @@ Requirements: git, pip, paho-mqtt, pymavlink
     ```
 - Clone MVSE Tools
     ```
-    git clone "link to be generated"
+    git clone https://github.com/FlexiGroBots-H2020/MVSE
     ```
 - In folder /Tools/QGC/ right-click on QGroundControl.AppImage -> Permissions -> Allow execute as a program
-- In qgc_side_conf.txt, change values of DEV_N and QGC_INST accordingly to environment
+- In empty_qgc_conf.json, change values of DEV_N and QGC_INST accordingly to environment and rename to qgc_conf.json
 
 # Simulation
 ## PX4 + jMAVSim Simulation
