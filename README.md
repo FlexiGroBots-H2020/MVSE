@@ -35,6 +35,12 @@ Live update of the fences is possible, and doesn't require mission to be halted.
 
 
 # Envirnoment Set-Up
+Clone MVSE Tools 
+
+```
+git clone https://github.com/FlexiGroBots-H2020/MVSE.git
+```
+
 ## PX4 + jMAVSim setup
 Requirements: Ubuntu 20.xx LTS, git, pip, paho-mqtt
 - Clone PX4-Autopilot suite and run the setup tool
@@ -42,11 +48,8 @@ Requirements: Ubuntu 20.xx LTS, git, pip, paho-mqtt
     git clone https://github.com/PX4/PX4-Autopilot.git --recursive
     bash ./PX4-Autopilot/Tools/setup/ubuntu.sh
     ```
-- Clone MVSE Tools
-    ```
-    git clone https://github.com/FlexiGroBots-H2020/MVSE
-    ```
-- Copy content of /Tools/PX4 in /PX4-Autopilot/MQTT
+
+- Copy content of /MVSE/PX4 in /PX4-Autopilot/MQTT
 - Edit empty_px4_conf.json to match instance value and MQTT address and credential and rename it px4_conf.json
 - Open a terminal in /PX4-Autopilot and run px4_mqtt_client.py  
 Make sure to  choose a free instance number
@@ -55,20 +58,20 @@ Make sure to  choose a free instance number
     ```
 The script will edit the config files in the PX4 source and start the MQTT client, close it if you don't need to run the simulation.
 ## QGroundControl  fist setup
-Requirements: git, pip, paho-mqtt, pymavlink  
+Libraries requirements (python):paho-mqtt, pymavlink  
 (tested with Ubuntu 20.04 LTS, for different distributions commands may differ)
+### Ubuntu
 - In a terminal execute
     ```
     sudo usermod –a –G dialout $USER
     sudo apt-get remove modemmanger –y
     sudo apt install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl –y
     ```
-- Clone MVSE Tools
-    ```
-    git clone https://github.com/FlexiGroBots-H2020/MVSE
-    ```
-- In folder /Tools/QGC/ right-click on QGroundControl.AppImage -> Permissions -> Allow execute as a program
+- In folder /MVSE/QGC/ right-click on QGroundControl.AppImage -> Permissions -> Allow execute as a program
 - In empty_qgc_conf.json, change values of DEV_N and QGC_INST accordingly to environment and rename to qgc_conf.json
+### Windows
+- Dowload and install QGroundControl from [here](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html)
+- In MVSE/QGC/empty_qgc_conf.json, change values of DEV_N and QGC_INST, fill MQTT broker data accordingly to environment and rename to qgc_conf.json
 
 # Simulation
 ## PX4 + jMAVSim Simulation
