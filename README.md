@@ -20,7 +20,7 @@ The received message is published with the topic **/(api-key)/0/qgc_to_px4_x**, 
 At the PX4 side, since all the PX4 instances are supposed to run on different devices, the mqtt received messages from QGC to PX4 are sent via UDP to port 18570, from the same socket that is listening on 14550 for PX4 to QGC packets. 
 This way there is no need of modifying the default ports in PX4 simulators.
 ## MAVLink Connection with External Devices
-If in the QGC configuration file ENABLE_EDEV is set to True, the received messages with topic __/(api-key)/10*/edev_to_qgc__ are received, the information contained in the plain text payload is decoded and saved.  
+If in the QGC configuration file ENABLE_EDEV is set to True, messages with topic __/(api-key)/10x/edev_to_qgc__ are received, the information contained in the plain text payload is decoded and saved.  
 The payload structure is __lat|xx.yyy|lon|xx.yy|ele|xx.yyy|h|xx.yyy|v|xx.yyy|m|xx.yyy__
 
 A pymavlink drone instance is created for every edev (to be set in the EDEV_N param), and every time an MQTT message is received, a GLOBAL_POSITION_INT Mavlink message is generated, along with a Heartbeat.
@@ -44,6 +44,7 @@ git clone https://github.com/FlexiGroBots-H2020/MVSE.git
 ## PX4 + jMAVSim setup
 Requirements: Ubuntu 20.xx LTS, git, pip, paho-mqtt
 - Clone PX4-Autopilot suite and run the setup tool
+
     ```
     git clone https://github.com/PX4/PX4-Autopilot.git --recursive
     bash ./PX4-Autopilot/Tools/setup/ubuntu.sh
@@ -51,7 +52,7 @@ Requirements: Ubuntu 20.xx LTS, git, pip, paho-mqtt
 
 - Copy content of /MVSE/PX4 in /PX4-Autopilot/MQTT
 - Edit empty_px4_conf.json to match instance value and MQTT address and credential and rename it px4_conf.json
-- Open a terminal in /PX4-Autopilot and run px4_mqtt_client.py  
+- Open a terminal in /PX4-Autopilot/MQTT and run px4_mqtt_client.py  
 Make sure to  choose a free instance number
     ```
     python3 px4_mqtt_client.py
@@ -88,12 +89,10 @@ python3 /MQTT/px4_mqtt_client.py
 ```
 
 ## QGroundControl
-Open two terminals in /MVSE/QGC  
-Start QGroundControl
-```
-. QGroundControl.AppImage
-```
+Note: If multiple instances of QGC are running, make sure that only one has __Emit Heartbeat__ checked in QGC -> Settings -> MAVLink
+- Run QGroundControl
+- Open a terminal in /MVSE/QGC  
 Start QGC MQTT Client
-```
-python3 qgc_mqtt_client.py
-```
+    ```
+    python3 qgc_mqtt_client.py
+    ```

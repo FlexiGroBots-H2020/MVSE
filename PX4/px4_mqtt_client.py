@@ -48,15 +48,15 @@ with open("px4-rc.params", "r") as px4_param_file:
     px4_param = px4_param_file.readlines()
 px4_param[3] = px4_param[3].replace("INSTANCE_NUMBER", str(INSTANCE_NUMBER))
 
-with open(os.path.dirname(__file__)+"/../ROMFS/px4fmu_common/init.d-posix/px4-rc.params", "w") as px4_new_param_file:
+with open(os.path.dirname(__file__)+"../ROMFS/px4fmu_common/init.d-posix/px4-rc.params", "w") as px4_new_param_file:
     px4_new_param_file.writelines(px4_param)
 
-shutil.copy2("px4-rc.mavlink", os.path.dirname(__file__)+"/../ROMFS/px4fmu_common/init.d-posix/")
+shutil.copy2("px4-rc.mavlink", os.path.dirname(__file__)+"../ROMFS/px4fmu_common/init.d-posix/")
 
-with open(os.path.dirname(__file__)+"/../Tools/jMAVSim/src/me/drton/jmavsim/Simulator.java", "r") as sim_file:
+with open(os.path.dirname(__file__)+"../Tools/jMAVSim/src/me/drton/jmavsim/Simulator.java", "r") as sim_file:
     sim = sim_file.readlines()
 sim[81] = "public static LatLonAlt DEFAULT_ORIGIN_POS = new LatLonAlt(65.056680, 25.458728, 1);"
-with open(os.path.dirname(__file__)+"/../Tools/jMAVSim/src/me/drton/jmavsim/Simulator.java", "w") as sim_file:
+with open(os.path.dirname(__file__)+"../Tools/jMAVSim/src/me/drton/jmavsim/Simulator.java", "w") as sim_file:
     sim_file.writelines(sim)
 
 # Print some useful information
