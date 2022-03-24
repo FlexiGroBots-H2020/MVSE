@@ -9,7 +9,7 @@
     "BASE_TOPIC_API_TO_PX4": "/api-key/1*/api_to_px4",
     "BASE_TOPIC_QGC_TO_PX4": "/api-key/0/qgc_to_px4_*",
     "BASE_TOPIC_PX4_TO_QGC": "/api-key/*/px4_to_qgc",
-    "BASE_TOPIC_TO_FIWARE": "/api-key/*/attr",
+    "BASE_TOPIC_TO_FIWARE": "/api-key/*/attrs",
     "CLIENT_NAME": "px4_*_side",
     "MQTT_BROKER_ADD": "",
     "MQTT_BROKER_USERNAME":"",

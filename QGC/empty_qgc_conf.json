@@ -14,5 +14,5 @@
     "BASE_MQTT_CLIENT_NAME": "qgc_*_side",
     "EDEV_ENABLE": 1,
     "API_KEY": "",
-    "TOPIC_EDEV_TO_QGC": "/api-key/+/attr"
+    "TOPIC_EDEV_TO_QGC": "/api-key/+/attrs"
 }
