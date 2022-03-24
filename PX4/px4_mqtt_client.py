@@ -122,7 +122,7 @@ def rec_pub(sock, topic, client):
                 tele["vy"] = int.from_bytes(data[32:34], byteorder= "little")/1e2
                 tele["vz"] = int.from_bytes(data[34:36], byteorder= "little")/1e2
                 tele["hdg"] = int.from_bytes(data[36:38], byteorder= "little")/100
-                tele["v"] = norm(array([tele["vx"],tele["vy"],tele["vz"]]))
+                tele["v"] = time.time() #norm(array([tele["vx"],tele["vy"],tele["vz"]]))
 
                 S = "lat|"+str(tele["lat"])+"|lon|"+str(tele["lon"])+"|ele|"+str(tele["ele"])+"|h|"+str(tele["hdg"])+"|v|"+str(tele["v"])
                 client.publish(TOPIC_TO_FIWARE, S)
