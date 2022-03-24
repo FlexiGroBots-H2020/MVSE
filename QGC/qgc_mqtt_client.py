@@ -20,6 +20,8 @@ API_KEY = param["API_KEY"]
 BASE_UDP_PORT_TO_PX4 = param["BASE_UDP_PORT_TO_PX4"]
 UDP_PORT_TO_QGC = param["UDP_PORT_TO_QGC"]
 MQTT_BROKER_ADD = param["MQTT_BROKER_ADD"]
+MQTT_BROKER_USERNAME = param["MQTT_BROKER_USERNAME"]
+MQTT_BROKER_PASSWORD = param["MQTT_BROKER_PASSWORD"]
 MQTT_PORT = param["MQTT_PORT"]
 BASE_TOPIC_QGC_TO_PX4 = param["BASE_TOPIC_QGC_TO_PX4"].replace('api-key', API_KEY)
 BASE_TOPIC_PX4_TO_QGC = param["BASE_TOPIC_PX4_TO_QGC"].replace('api-key', API_KEY)
@@ -99,7 +101,9 @@ Connected = False       #global variable for the state of the connection
 client = mqttClient.Client(MQTT_CLIENT_NAME)        #create new instance
 client.on_connect= on_connect                       #attach function to callback
 client.on_message= on_message     
-client.connect(MQTT_BROKER_ADD, port=MQTT_PORT)          #connect to broker
+if MQTT_BROKER_USERNAME != "" and MQTT_BROKER_PASSWORD != "":
+    client.username_pw_set(MQTT_BROKER_USERNAME, MQTT_BROKER_PASSWORD)
+client.connect(MQTT_BROKER_ADD, port=MQTT_PORT)
 client.loop_start()        #start the loop
 while Connected != True:    #Wait for connection
     time.sleep(0.001)
